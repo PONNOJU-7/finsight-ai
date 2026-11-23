@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out-tsc/
+.angular/
+
+# Environment & secrets (never commit real keys)
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/src/environments/environment.prod.ts.local
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Logs & caches
+*.log
+npm-debug.log*
+.cache/
+backend/dist/
