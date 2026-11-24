@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import multipart from '@fastify/multipart';
 import { AppModule } from './app.module';
@@ -14,7 +15,10 @@ async function bootstrap() {
 
   await app.register(multipart, { limits: { fileSize: 10 * 1024 * 1024 } });
 
-  app.enableCors({ origin: ['http://localhost:4200'], credentials: true });
+  const configService = app.get(ConfigService);
+  const corsEnv = configService.get<string>('CORS_ORIGINS') ?? 'http://localhost:4200';
+  const corsOrigins = corsEnv.split(',').map(o => o.trim()).filter(Boolean);
+  app.enableCors({ origin: corsOrigins, credentials: true });
 
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
